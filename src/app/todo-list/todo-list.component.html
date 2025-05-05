@@ -1,0 +1,14 @@
+<h2>Todo List</h2>
+<app-todo-form (submit)="addTodo($event)"></app-todo-form>
+<ul>
+  <li *ngFor="let todo of todos; trackBy: trackById">
+    <input
+      type="checkbox"
+      [(ngModel)]="todo.completed"
+      (change)="updateTodo(todo)"
+    />
+    {{ todo.title }}
+    <button (click)="editTodo(todo)">Edit</button>
+    <button (click)="deleteTodo(todo.id)">Delete</button>
+  </li>
+</ul>
