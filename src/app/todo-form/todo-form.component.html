@@ -1,0 +1,10 @@
+<form (ngSubmit)="onSubmit($event)">
+    <input
+      type="text"
+      [(ngModel)]="todo.title"
+      name="title"
+      placeholder="Enter todo"
+      required
+    />
+    <button type="submit" [disabled]="!todo.title">{{ todo.id ? 'Update' : 'Add' }} Todo</button>
+  </form>
