@@ -23,6 +23,9 @@ export class TodoService {
 
   addTodo(todo: Todo): Observable<Todo> {
     console.log('Service adding todo:', todo); // Debug log
+    if (!todo.title.trim()) {
+      console.warn('Attempted to add todo with empty title:', todo);
+    }
     // Prevent duplicates by checking id or title
     if (!this.todos.some((t) => t.id === todo.id || t.title === todo.title)) {
       this.todos = [...this.todos, todo]; // Update immutably

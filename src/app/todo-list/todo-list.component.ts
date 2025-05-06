@@ -17,45 +17,75 @@ export class TodoListComponent implements OnInit {
   constructor(private todoService: TodoService) {}
 
   ngOnInit() {
-    this.todoService.getTodos().subscribe((todos) => {
-      this.todos = todos;
-      console.log('Todos updated:', this.todos); // Debug log
+    this.loadTodos();
+  }
+
+  loadTodos() {
+    this.todoService.getTodos().subscribe({
+      next: (todos) => {
+        this.todos = todos;
+        console.log('Todos loaded:', this.todos);
+      },
+      error: (err) => console.error('Error loading todos:', err)
     });
   }
 
-  addTodo(todo: Todo) {
-    console.log('Adding todo:', todo); // Debug log
-    // Guard against invalid todo objects
-    if (!todo || typeof todo.title !== 'string' || !todo.title.trim()) {
-      console.error('Invalid todo object:', todo);
+  onFormSubmit(todo: Todo) {
+    const trimmedTitle = todo.title.trim();
+    if (!trimmedTitle) {
+      console.warn('Rejected blank todo:', todo);
       return;
     }
-    if (this.todoToEdit) {
-      this.todoService.updateTodo(todo).subscribe(() => {
-        this.todoToEdit = null;
+  
+    if (todo.id) {
+      // Update mode
+      this.todoService.updateTodo(todo).subscribe({
+        next: () => {
+          this.todoToEdit = null;
+          this.loadTodos();
+        }
       });
     } else {
-      const newTodo = { ...todo, id: this.todos.length + 1 };
-      this.todoService.addTodo(newTodo).subscribe((addedTodo) => {
-        // Ensure no duplicates in local todos array
-        if (!this.todos.some((t) => t.id === addedTodo.id)) {
-          this.todos = [...this.todos, addedTodo]; // Update immutably
+      // Add mode
+      const newId = this.todos.length > 0
+        ? Math.max(...this.todos.map(t => t.id)) + 1
+        : 1;
+  
+      const newTodo = {
+        ...todo,
+        id: newId,
+        title: trimmedTitle,
+        completed: false,
+      };
+  
+      this.todoService.addTodo(newTodo).subscribe({
+        next: () => {
+          this.todoToEdit = null;
+          this.loadTodos();
         }
       });
     }
   }
+  
 
   editTodo(todo: Todo) {
+    console.log('Editing todo:', todo);
     this.todoToEdit = { ...todo };
   }
 
   updateTodo(todo: Todo) {
-    this.todoService.updateTodo(todo).subscribe();
+    console.log('Updating todo (checkbox):', todo);
+    this.todoService.updateTodo(todo).subscribe({
+      next: () => this.loadTodos(),
+      error: (err) => console.error('Error updating todo:', err)
+    });
   }
 
   deleteTodo(id: number) {
-    this.todoService.deleteTodo(id).subscribe(() => {
-      this.todos = this.todos.filter((todo) => todo.id !== id);
+    console.log('Deleting todo with id:', id);
+    this.todoService.deleteTodo(id).subscribe({
+      next: () => this.loadTodos(),
+      error: (err) => console.error('Error deleting todo:', err)
     });
   }
 

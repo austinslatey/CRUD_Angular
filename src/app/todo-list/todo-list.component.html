@@ -1,5 +1,5 @@
 <h2>Todo List</h2>
-<app-todo-form (submit)="addTodo($event)"></app-todo-form>
+<app-todo-form [todo]="todoToEdit || { id: 0, title: '', completed: false }" (submit)="onFormSubmit($event)"></app-todo-form>
 <ul>
   <li *ngFor="let todo of todos; trackBy: trackById">
     <input

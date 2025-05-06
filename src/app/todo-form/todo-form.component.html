@@ -1,10 +1,19 @@
-<form (ngSubmit)="onSubmit($event)">
+<form (submit)="onSubmit($event)">
     <input
       type="text"
-      [(ngModel)]="todo.title"
+      [(ngModel)]="localTodo.title"
       name="title"
-      placeholder="Enter todo"
+      placeholder="Enter todo title"
       required
     />
-    <button type="submit" [disabled]="!todo.title">{{ todo.id ? 'Update' : 'Add' }} Todo</button>
+  
+    <label>
+      <input type="checkbox" [(ngModel)]="localTodo.completed" name="completed" />
+      Completed
+    </label>
+  
+    <button type="submit" [disabled]="!localTodo.title">
+      {{ localTodo.id ? 'Update' : 'Add' }} Todo
+    </button>
   </form>
+  
