@@ -14,7 +14,7 @@ export class TodoListComponent implements OnInit {
   todos: Todo[] = [];
   todoToEdit: Todo | null = null;
 
-  constructor(private todoService: TodoService) {}
+  constructor(private todoService: TodoService) { }
 
   ngOnInit() {
     this.loadTodos();
@@ -31,33 +31,33 @@ export class TodoListComponent implements OnInit {
   }
 
   onFormSubmit(todo: Todo) {
-    const trimmedTitle = todo.title.trim();
-    if (!trimmedTitle) {
-      console.warn('Rejected blank todo:', todo);
+    if (!todo || !todo.title?.trim()) {
+      console.warn('Form submit attempted with invalid todo:', todo);
       return;
     }
-  
+
+    const trimmedTitle = todo.title.trim();
+
     if (todo.id) {
-      // Update mode
-      this.todoService.updateTodo(todo).subscribe({
+      // Update
+      this.todoService.updateTodo({ ...todo, title: trimmedTitle }).subscribe({
         next: () => {
           this.todoToEdit = null;
           this.loadTodos();
         }
       });
     } else {
-      // Add mode
+      // Add new
       const newId = this.todos.length > 0
         ? Math.max(...this.todos.map(t => t.id)) + 1
         : 1;
-  
-      const newTodo = {
-        ...todo,
+
+      const newTodo: Todo = {
         id: newId,
         title: trimmedTitle,
-        completed: false,
+        completed: false
       };
-  
+
       this.todoService.addTodo(newTodo).subscribe({
         next: () => {
           this.todoToEdit = null;
@@ -66,7 +66,7 @@ export class TodoListComponent implements OnInit {
       });
     }
   }
-  
+
 
   editTodo(todo: Todo) {
     console.log('Editing todo:', todo);
@@ -81,11 +81,10 @@ export class TodoListComponent implements OnInit {
     });
   }
 
-  deleteTodo(id: number) {
-    console.log('Deleting todo with id:', id);
-    this.todoService.deleteTodo(id).subscribe({
-      next: () => this.loadTodos(),
-      error: (err) => console.error('Error deleting todo:', err)
+  deleteTodo(todo: Todo) {
+    this.todoService.deleteTodo(todo.id).subscribe(() => {
+      this.todoToEdit = null;
+      this.loadTodos();
     });
   }
 
