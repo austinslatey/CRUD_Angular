@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule, TodoFormComponent],
   templateUrl: './todo-list.component.html',
+  styleUrls: ['./todo-list.component.scss']
 })
 export class TodoListComponent implements OnInit {
   todos: Todo[] = [];

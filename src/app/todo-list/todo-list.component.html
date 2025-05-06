@@ -1,14 +1,26 @@
-<h2>Todo List</h2>
-<app-todo-form [todo]="todoToEdit || { id: 0, title: '', completed: false }" (submit)="onFormSubmit($event)"></app-todo-form>
-<ul>
-  <li *ngFor="let todo of todos; trackBy: trackById">
-    <input
-      type="checkbox"
-      [(ngModel)]="todo.completed"
-      (change)="updateTodo(todo)"
-    />
-    {{ todo.title }}
-    <button (click)="editTodo(todo)">Edit</button>
-    <button (click)="deleteTodo(todo)">Delete</button>
-  </li>
-</ul>
+<div class="todo-container">
+  <h2>Todo List</h2>
+
+  <app-todo-form
+    class="todo-form"
+    [todo]="todoToEdit || { id: 0, title: '', completed: false }"
+    (submit)="onFormSubmit($event)"
+  ></app-todo-form>
+
+  <ul class="todo-list">
+    <li *ngFor="let todo of todos; trackBy: trackById" class="todo-item">
+      <label>
+        <input
+          type="checkbox"
+          [(ngModel)]="todo.completed"
+          (change)="updateTodo(todo)"
+        />
+        <span [class.completed]="todo.completed">{{ todo.title }}</span>
+      </label>
+      <div class="actions">
+        <button (click)="editTodo(todo)">Edit</button>
+        <button (click)="deleteTodo(todo)">Delete</button>
+      </div>
+    </li>
+  </ul>
+</div>
