@@ -47,6 +47,6 @@ export class TodoService {
 
   deleteTodo(id: number): Observable<void> {
     this.todos = this.todos.filter((todo) => todo.id !== id);
-    return of();
+    return of(undefined);
   }
 }
