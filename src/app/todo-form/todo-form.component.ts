@@ -1,12 +1,14 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Todo } from '../services/todo.service';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-todo-form',
   standalone: true,
-  imports: [FormsModule],
   templateUrl: './todo-form.component.html',
+  styleUrls: ['./todo-form.component.scss'],
+  imports: [CommonModule, FormsModule],
 })
 export class TodoFormComponent {
   @Input() todo: Todo | null = null;

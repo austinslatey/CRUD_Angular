@@ -1,4 +1,5 @@
-<form (submit)="onSubmit($event)">
+<div class="todo-form">
+  <form (submit)="onSubmit($event)">
     <input
       type="text"
       [(ngModel)]="localTodo.title"
@@ -6,14 +7,14 @@
       placeholder="Enter todo title"
       required
     />
-  
+
     <label>
       <input type="checkbox" [(ngModel)]="localTodo.completed" name="completed" />
       Completed
     </label>
-  
+
     <button type="submit" [disabled]="!localTodo.title">
       {{ localTodo.id ? 'Update' : 'Add' }} Todo
     </button>
   </form>
-  
+</div>
